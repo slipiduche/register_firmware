@@ -78,7 +78,7 @@ String get_chipidstr()
 }
 
 void setupAPSSID(int state){
-  String SSID2 = "&" + String(state) +"R"+ String(chipid) + String(devName);
+  String SSID2 = "&" + String(state) +"G"+ String(chipid) + String(devName);
   String set1 = "set1," + String(ssid) + "," + String(password) + "," + SSID2 + "," + String(password2) + "," + String(MQTTHost) + "," + String(MQTTPort) + "," + String(MQTTUsername) + "," + String(MQTTPassword) + ",1,";
   loadsdconfig(set1);
 }
