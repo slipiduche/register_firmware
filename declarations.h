@@ -195,7 +195,7 @@ bool cambioFechaHora = false;
 #define PN532_MOSI (23)
 #define PN532_SS (15)
 #define PN532DEBUG
-#define bootX 2
+#define bootX 5
 /////NFC variables
 Adafruit_PN532 nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS);
 long int nfcDelay = 0;
