@@ -235,12 +235,12 @@ void wifi_mqtt_loop()
     if ((tagId > 0) && (tagId != tagIdPrev))
     {
       tagIdPrev = tagId;
-      wifi_mqtt_publish((clientId), "{\"TAG\":\"" + String(tagId) + "\",\"ACTION\":\"START\"}");
+      wifi_mqtt_publish(("REGISTER/INFO"), "{\"TAG\":\"" + String(tagId) + "\"}");
     }
     if ((tagId == 0) && (tagId != tagIdPrev))
     {
       tagIdPrev = tagId;
-      wifi_mqtt_publish((clientId), "{\"TAG\":\"" + String(tagId) + "\",\"ACTION\":\"STOP\"}");
+      wifi_mqtt_publish(("REGISTER/INFO"), "{\"TAG\":\"" + String(tagId) + "\"}");
     }
     if (serverPoll)
     {
