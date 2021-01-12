@@ -10,7 +10,7 @@ void loop() ///nfc LOOP
     ESP.restart();
   }
 
-  if ((abs(millis() - nfcDelay) >= 1000) && (bussyMqtt == 0))
+  if ((abs(millis() - nfcDelay) >= 250) && (bussyMqtt == 0))
   {
     tagId = nfc_Loop();
     nfcDelay = millis();
