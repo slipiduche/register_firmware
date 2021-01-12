@@ -232,7 +232,7 @@ void wifi_mqtt_loop()
   {
     Serial.println(tagId);
 
-    if ((tagId > 0) && (tagId != tagIdPrev))
+    if ((tagId > 1) && (tagId != tagIdPrev))
     {
       tagIdPrev = tagId;
       wifi_mqtt_publish(("REGISTER/INFO"), "{\"TAG\":\"" + String(tagId) + "\"}");

@@ -59,7 +59,7 @@ uint32_t nfc_Loop(void)
     else
     {
       nfcSetup();
-      return 0;
+      return 1;
     }
     Serial.println("");
   }
