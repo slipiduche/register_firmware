@@ -1,10 +1,11 @@
 /***DEBUG_PORT***/
 #define DEBUG
 #ifdef DEBUG
-#define DEBUG_PORT Serial 
+#define DEBUG_PORT Serial
 #define DEBUG_PRINT(x) Serial.print(x)
 #define DEBUG_WRITE(x) Serial.write(x)
 #define DEBUG_PRINTx(x, y) Serial.print(x, y)
+#define DEBUG_PRINTxy(x, y, z, w) Serial.print(x, y, z, w)
 #define DEBUG_PRINTDEC(x) Serial.print(x, DEC)
 #define DEBUG_PRINTLN(x) Serial.println(x)
 #define DEBUG_PRINTLNx(x, y) Serial.println(x, y)
@@ -18,7 +19,7 @@
 #define DEBUG_PRINTLNx(x, y)
 #endif
 ////////////////
-#include "EEPROM.h" 
+#include "EEPROM.h"
 #include <RTClib.h>
 RTC_Millis rtcSoft;
 #include <SPI.h>
@@ -40,25 +41,25 @@ WiFiClient client1;
 ESP32WebServer server(80); //web server
 /**SPIFF**/
 #define fun_spiff
-File logFile; 
+File logFile;
 /**** REGISTERS ****/
 //#define devBoard //comment if is final board
-#ifdef  devBoard
-#define wifiled 5                    //32 final board
+#ifdef devBoard
+#define wifiled 5   //32 final board
 #define NFCPOWER 27 // 5 final board
 #else
-#define wifiled 32                    //32 final board
+#define wifiled 32 //32 final board
 #define NFCPOWER 5 // 5 final board
 #endif
-#define RetardoAntirebotePulsador 25 
+#define RetardoAntirebotePulsador 25
 #define salidabajoactiva
-#ifdef salidabajoactiva 
+#ifdef salidabajoactiva
 #define OFF_bit 1
 #define ON_bit 0
 #define OFF HIGH
 #define ON LOW
 #endif
-#ifdef salidaaltoactiva 
+#ifdef salidaaltoactiva
 #define OFF_bit 0
 #define ON_bit 1
 #define OFF LOW
@@ -68,8 +69,8 @@ File logFile;
 /****fun_web Variables****/
 bool noAP = 1;
 int tnoAP = 0;
-String webpage = "";     
-bool SD_present = false; 
+String webpage = "";
+bool SD_present = false;
 /*************/
 unsigned long actualizar_hora = 0;
 unsigned long t_ultima_accion = 0;
@@ -104,10 +105,10 @@ DateTime now;
 int prevmin = 0, prevday = 0;
 int rtcrestart = 0; //
 unsigned long timeout1 = 0, timeout2 = 0;
-bool webwork = 0; 
+bool webwork = 0;
 bool envia = 0;
-int change = 0;  //if changes happens sends data
-int modo_automatico = 0; 
+int change = 0; //if changes happens sends data
+int modo_automatico = 0;
 int numero_horarios = 0;
 bool sal = 0;
 int ciclo_actual = 0;
@@ -117,33 +118,33 @@ int chlength = 0;
 String formdata, vacio = "";
 ///-------------Set wifi network parameters---------------------
 /****WIFI****/
-char ssid[60] = "orbittas";     //WIFI SSID
-char password[60] = "20075194"; //WIFI PASSWORD
-char ssid2[60] = "REGISTER";       //AP SSID
+char ssid[60] = "orbittas";      //WIFI SSID
+char password[60] = "20075194";  //WIFI PASSWORD
+char ssid2[60] = "REGISTER";     //AP SSID
 char password2[60] = "12345678"; //AP PASSWORD
 String WRSSI;
 /****SPIFF****/
-long int lastposition2 = 0; 
-long int lastposition = 0;  
-long int lastposition3 = 0; 
-long int lastposition4 = 0; 
+long int lastposition2 = 0;
+long int lastposition = 0;
+long int lastposition3 = 0;
+long int lastposition4 = 0;
 //////MQTT
-#define USEWIFIMQTT        
-#include "PubSubClient.h" 
-WiFiClient espClient;     
-PubSubClient mqttclient(espClient); 
+#define USEWIFIMQTT
+#include "PubSubClient.h"
+WiFiClient espClient;
+PubSubClient mqttclient(espClient);
 /****Variables WIFI MQTT****/
 char host[120] = "broker.mqttdashboard.com";
-char datarecvd[512]; 
-int reconnect = 0;   
+char datarecvd[512];
+int reconnect = 0;
 /****parametros mqtt ****/
-char MQTTHost[120] = "broker.mqttdashboard.com"; 
-char MQTTPort[6] = "1883";                       
-char MQTTClientID[60] = "";                      
-char MQTTTopic[60] = "";                         
-char MQTTTopic2[60] = "";                        
-char MQTTUsername[60] = "*";                     
-char MQTTPassword[120] = "*";                    
+char MQTTHost[120] = "broker.mqttdashboard.com";
+char MQTTPort[6] = "1883";
+char MQTTClientID[60] = "";
+char MQTTTopic[60] = "";
+char MQTTTopic2[60] = "";
+char MQTTUsername[60] = "*";
+char MQTTPassword[120] = "*";
 uint32_t ChipId32, wait = 0, wait2 = 0, wait3 = 0;
 uint16_t ChipId16;
 uint64_t ChipId;
@@ -164,23 +165,23 @@ char password2_aux[60] = ""; //AP PASSWORD
 char host_aux[120] = "";
 char MQTTUsername_aux[60] = "";
 char MQTTPassword_aux[120] = "";
-char MQTTHost_aux[120] = ""; 
+char MQTTHost_aux[120] = "";
 char MQTTPort_aux[6] = "";
-int changev = 0;  
-int changev2 = 0; 
+int changev = 0;
+int changev2 = 0;
 int inicio = 0;
 int proximo_ciclo_aux = 0;
 int proximo_ciclo_aux1 = 0;
 long int mqttdelay = 0, blikDelay = 0;
-int env_prox = 0; 
+int env_prox = 0;
 bool solicitud_web = 0;
 bool envia_horarios = 0;
 bool guardarHorarios = 0;
-int subscribed = 0; 
+int subscribed = 0;
 bool rtcFalla = 0;
 bool wifiLedState = false;
 bool apMode = 0;
-bool apActivate=0;
+bool apActivate = 0;
 bool guardarAp = 0;
 String ipRed = "0.0.0.0";
 bool cambioIp = 0;
@@ -208,5 +209,23 @@ bool bussyMqtt = 0;
 /////
 String Shora = "", Sfecha = "", Sday = "", Smonth = "", Syear = "", Shr = "", Smin = "";
 /////server protocol
-bool serverPoll = 0; /// 
+bool serverPoll = 0; ///
 char devName[11] = "room-x";
+
+long apDelay = 0;
+int apDelayCount = 0;
+
+#include <time.h>
+#include <stdio.h>
+#include <string.h>
+#include <SPI.h>
+
+#include <freertos/queue.h>
+#include <freertos/task.h>
+#include <esp_task_wdt.h>
+
+#include <driver/adc.h>
+
+#include <base64.h>
+SemaphoreHandle_t SPIsem = NULL; // For exclusive SPI usage
+TaskHandle_t maintask;                // Taskhandle for main task

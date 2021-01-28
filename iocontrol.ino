@@ -23,6 +23,12 @@ void wifiLedBlink()
 {
   if ((subscribed == 0) || (WiFi.status() != WL_CONNECTED) || (mqttclient.state() != 0))
   {
+    // Serial.print("subscribed=");
+    // Serial.println(subscribed);
+    // Serial.print("wifistatus=");
+    // Serial.println((WiFi.status() != WL_CONNECTED));
+    // Serial.print("mattclientstate=");
+    // Serial.println((mqttclient.state()));
     if (abs(millis() - blikDelay) >= 250)
     {
 

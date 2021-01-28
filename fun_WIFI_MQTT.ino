@@ -70,55 +70,15 @@ void wifi_mqtt_reconnect(char mqtttopic[120], char mqtttopic2[120])
   char topicCh[120];
 
   String topic_s = "";
-
-  if ((WiFi.status() == WL_CONNECTED) && (apMode == 0))
-  {
-    while (!mqttclient.connected())
-    {
-      DEBUG_PRINT("Attempting MQTT connection...");
-
-      String topic_s = clientId;
-
-      DEBUG_PRINTLN(MQTTUsername);
-      DEBUG_PRINTLN(MQTTPassword);
-      if (mqttclient.connect(clientId.c_str(), MQTTUsername, MQTTPassword))
-      {
-        DEBUG_PRINTLN("WCONNECT PACKET SUCCESS");
-        inicio = 2;
-        wifi_mqtt_publish(topic_s.c_str(), "{\"mqtt\": \"RECONNECTED\"}");
-        topic_s = "";
-
-        topic_s = "SERVER/POLL";
-        DEBUG_PRINTLN(topic_s);
-        wifi_mqtt_subscribe(topic_s.c_str());
-        topic_s = "";
-        topic_s = "SERVER/" + chipid;
-        DEBUG_PRINTLN(topic_s);
-        wifi_mqtt_subscribe(topic_s.c_str());
-        reconnect = 0;
-        bussyMqtt = 0;
-      }
-      else
-      {
-        DEBUG_PRINT("failed, rc=");
-        DEBUG_PRINT(mqttclient.state());
-        DEBUG_PRINTLN(" try again in 5 seconds");
-#ifdef AP
-
-#endif
-        reconnect++;
-
-        if ((reconnect > 4) && (apMode == 0))
-        {
-          apMode = 1;
-          reconnect = 0;
-          WiFi.reconnect();
-          inicio = 1;
-        }
-      }
-      wifiLedBlink();
-    }
+  DEBUG_PRINTLN("");
+  DEBUG_PRINT("pasando por aqui antes de status:");
+  DEBUG_PRINTLN(WiFi.status());
+  if (WiFi.status() != WL_CONNECTED)
+  {  DEBUG_PRINT("pasando por aqui antes de conectar wifi:");
+    wifi_mqtt_setup();
   }
+  wifi_mqtt_reconnect_setup(MQTTTopic, MQTTTopic2);
+  bussyMqtt = 0;
 }
 
 void wifi_mqtt_reconnect_setup(char mqtttopic[120], char mqtttopic2[120])
@@ -166,9 +126,11 @@ void wifi_mqtt_reconnect_setup(char mqtttopic[120], char mqtttopic2[120])
 
         if ((reconnect > 4) && (apMode == 0))
         {
-          apMode = 1;
+          //apMode = 1;
           reconnect = 0;
+          WiFi.disconnect(true);
           WiFi.reconnect();
+
           inicio = 1;
           break;
         }
@@ -234,7 +196,7 @@ void wifi_mqtt_loop()
 
     if ((tagId > 1)) //&& (tagId != tagIdPrev))
     {
-      tagIdPrev = tagId;
+
       wifi_mqtt_publish(("REGISTER/INFO"), "{\"TAG\":\"" + String(tagId) + "\"}");
     }
     // if ((tagId == 0) && (tagId != tagIdPrev))
