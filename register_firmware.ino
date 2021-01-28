@@ -22,7 +22,7 @@ void loop() ///nfc LOOP
     ESP.restart();
   }
 
-  if ((abs(millis() - nfcDelay) >= 250) && (bussyMqtt == 0))
+  if ((abs(millis() - nfcDelay) >= 250) && (bussyMqtt == 0)&&(apMode==0))
   {
     claimSPI("NFC"); // Claim SPI bus
     tagId = nfc_Loop();
@@ -103,7 +103,7 @@ void WebComm(void *parameter) ///webloop
       }
     }
 
-    if (mqttclient.state() == 0)
+    if (mqttclient.state() == 0 && (apMode == 0))
     {
       claimSPI("WebComm"); // Claim SPI bus
       wifi_mqtt_loop();
