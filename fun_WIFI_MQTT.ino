@@ -32,11 +32,11 @@ void wifi_mqtt_setup()
     if (count > 50)
     {
       count = 0;
-      apMode = 1;
-      setupAPSSID(0);
+      //apMode = 1;
+      //setupAPSSID(0);
       break;
     }
-    wifiLedBlink();
+    //wifiLedBlink();
   }
   if (count > 0)
   {
@@ -74,7 +74,8 @@ void wifi_mqtt_reconnect(char mqtttopic[120], char mqtttopic2[120])
   DEBUG_PRINT("pasando por aqui antes de status:");
   DEBUG_PRINTLN(WiFi.status());
   if (WiFi.status() != WL_CONNECTED)
-  {  DEBUG_PRINT("pasando por aqui antes de conectar wifi:");
+  {
+    DEBUG_PRINT("pasando por aqui antes de conectar wifi:");
     wifi_mqtt_setup();
   }
   wifi_mqtt_reconnect_setup(MQTTTopic, MQTTTopic2);
@@ -122,20 +123,34 @@ void wifi_mqtt_reconnect_setup(char mqtttopic[120], char mqtttopic2[120])
 #ifdef AP
 
 #endif
-        reconnect++;
-
-        if ((reconnect > 4) && (apMode == 0))
-        {
-          //apMode = 1;
-          reconnect = 0;
-          WiFi.disconnect(true);
-          WiFi.reconnect();
-
-          inicio = 1;
-          break;
-        }
       }
-      wifiLedBlink();
+      //wifiLedBlink();
+    }
+  }
+  else
+  {
+    reconnect++;
+
+    if ((reconnect > 1) && (apMode == 0) && WiFi.status() != WL_CONNECTED)
+    {
+      //apMode = 1;
+      reconnect = 0;
+      WiFi.disconnect(true);
+      WiFi.reconnect();
+      DEBUG_PRINTLN(" reconectando wifi0.");
+      inicio = 1;
+      
+      break;
+    }
+    if ((reconnect > 5) && (apMode == 0))
+    {
+      //apMode = 1;
+      reconnect = 0;
+      WiFi.disconnect(true);
+      WiFi.reconnect();
+      DEBUG_PRINTLN(" reconectando wifi1.");
+      inicio = 1;
+      break;
     }
   }
 }
