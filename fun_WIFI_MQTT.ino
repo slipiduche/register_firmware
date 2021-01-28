@@ -125,6 +125,18 @@ void wifi_mqtt_reconnect_setup(char mqtttopic[120], char mqtttopic2[120])
 #endif
       }
       //wifiLedBlink();
+      reconnect++;
+      if ((reconnect > 5) && (apMode == 0))
+      {
+        //apMode = 1;
+        reconnect = 0;
+        WiFi.disconnect(true);
+        WiFi.reconnect();
+        DEBUG_PRINTLN(" reconectando wifi2.");
+        inicio = 1;
+        //ESP.restart();
+        break;
+      }
     }
   }
   else
@@ -139,7 +151,7 @@ void wifi_mqtt_reconnect_setup(char mqtttopic[120], char mqtttopic2[120])
       WiFi.reconnect();
       DEBUG_PRINTLN(" reconectando wifi0.");
       inicio = 1;
-
+      ESP.restart();
       return;
     }
     if ((reconnect > 5) && (apMode == 0))
@@ -150,6 +162,7 @@ void wifi_mqtt_reconnect_setup(char mqtttopic[120], char mqtttopic2[120])
       WiFi.reconnect();
       DEBUG_PRINTLN(" reconectando wifi1.");
       inicio = 1;
+      ESP.restart();
       return;
     }
   }
