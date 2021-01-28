@@ -109,7 +109,7 @@ void WebComm(void *parameter) ///webloop
       claimSPI("WebComm"); // Claim SPI bus
       wifi_mqtt_loop();
       releaseSPI(); // Release SPI bus
-      sendTag = 0;
+      
     }
   }
   vTaskDelay(10000);

@@ -242,6 +242,7 @@ void wifi_mqtt_loop()
         serverPoll = 0;
       }
     }
+    sendTag = 0;
     mqttdelay = millis();
   }
 }
