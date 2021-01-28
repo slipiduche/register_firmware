@@ -4,7 +4,7 @@ void loop() ///nfc LOOP
 {           //Serial.print("nfcloop running on core ");
   // Serial.println(xPortGetCoreID());
 
-  if (!digitalRead(0) && apMode == 0 && (abs(millis() - apDelay) >= 1000))
+  if (!digitalRead(0) && apMode == 0 && (abs(millis() - apDelay) >= 500))
   {
 
     apDelayCount++;
@@ -22,12 +22,12 @@ void loop() ///nfc LOOP
     ESP.restart();
   }
 
-  if ((abs(millis() - nfcDelay) >= 250) && (bussyMqtt == 0)&&(apMode==0))
+  if ((abs(millis() - nfcDelay) >= 150) && (bussyMqtt == 0) && (apMode == 0) && (sendTag ==0))
   {
     claimSPI("NFC"); // Claim SPI bus
     tagId = nfc_Loop();
     releaseSPI(); // Release SPI bus
-    if (tagIdPrev == tagId)
+    if (tagIdPrev == tagId || (tagId == 0) || (tagId == 1))
     {
       tagIdPrev = tagId;
       tagId = 0;
@@ -36,6 +36,7 @@ void loop() ///nfc LOOP
     {
 
       tagIdPrev = tagId;
+      sendTag = 1;
     }
 
     nfcDelay = millis();
@@ -108,6 +109,7 @@ void WebComm(void *parameter) ///webloop
       claimSPI("WebComm"); // Claim SPI bus
       wifi_mqtt_loop();
       releaseSPI(); // Release SPI bus
+      sendTag = 0;
     }
   }
   vTaskDelay(10000);

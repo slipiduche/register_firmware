@@ -220,10 +220,10 @@ void wifi_mqtt_loop()
   mqttclient.loop();
   if (abs(millis() - mqttdelay) >= 500)
   {
-    Serial.println(tagId);
 
     if ((tagId > 1)) //&& (tagId != tagIdPrev))
     {
+      Serial.println(tagId);
 
       wifi_mqtt_publish(("REGISTER/INFO"), "{\"TAG\":\"" + String(tagId) + "\"}");
     }

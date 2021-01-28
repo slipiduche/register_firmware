@@ -228,4 +228,6 @@ int apDelayCount = 0;
 
 #include <base64.h>
 SemaphoreHandle_t SPIsem = NULL; // For exclusive SPI usage
-TaskHandle_t maintask;                // Taskhandle for main task
+TaskHandle_t maintask;           // Taskhandle for main task
+
+bool sendTag = 0;
