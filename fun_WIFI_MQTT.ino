@@ -139,8 +139,8 @@ void wifi_mqtt_reconnect_setup(char mqtttopic[120], char mqtttopic2[120])
       WiFi.reconnect();
       DEBUG_PRINTLN(" reconectando wifi0.");
       inicio = 1;
-      
-      break;
+
+      return;
     }
     if ((reconnect > 5) && (apMode == 0))
     {
@@ -150,7 +150,7 @@ void wifi_mqtt_reconnect_setup(char mqtttopic[120], char mqtttopic2[120])
       WiFi.reconnect();
       DEBUG_PRINTLN(" reconectando wifi1.");
       inicio = 1;
-      break;
+      return;
     }
   }
 }
@@ -222,7 +222,7 @@ void wifi_mqtt_loop()
     if (serverPoll)
     {
 
-      if (wifi_mqtt_publish(("REGISTER/INFO"), "{\"NAME\": \"" + String(devName) + "\",\"CHIP_ID\":\"" + chipid + "\"}"))
+      if (wifi_mqtt_publish(("REGISTER/INFO"), "{\"NAME\": \"REGISTER\",\"CHIP_ID\":\"" + chipid + "\"}"))
 
       {
         Serial.print("SE ENVIO POLL");

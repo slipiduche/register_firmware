@@ -120,6 +120,7 @@ void APmode(void *parameter) ///APmode
 
     if ((apMode) && (!apActivate))
     {
+      Serial.println("Force ap Mode");
       apActivate = 1;
       setupAPSSID(0);
       web_setup();

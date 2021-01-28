@@ -21,7 +21,7 @@ bool NFCPOWEROff()
 }
 void wifiLedBlink()
 {
-  if ((subscribed == 0) || (WiFi.status() != WL_CONNECTED) || (mqttclient.state() != 0))
+  if ((subscribed == 0) || (WiFi.status() != WL_CONNECTED) || (mqttclient.state() != 0)||(apMode==1))
   {
     // Serial.print("subscribed=");
     // Serial.println(subscribed);
@@ -29,7 +29,12 @@ void wifiLedBlink()
     // Serial.println((WiFi.status() != WL_CONNECTED));
     // Serial.print("mattclientstate=");
     // Serial.println((mqttclient.state()));
-    if (abs(millis() - blikDelay) >= 250)
+
+    int bdelay=250;
+    if (apMode){
+      bdelay=100;
+    }
+    if (abs(millis() - blikDelay) >= bdelay)
     {
 
       blikDelay = millis();
