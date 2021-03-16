@@ -23,6 +23,17 @@ void setup()
   if (boottime == bootX)
   {
     read_spiffconfig1(); //alocated in fun_spiff
+    int aP = EEPROM.read(2);
+    if (aP == 25)
+    {
+      DEBUG_PRINTLN("eeprom AP");
+      setupAPSSID(0);
+      save_config1_spiff();
+      EEPROM.write(2, 0); //(pos,data)
+      EEPROM.commit();
+      apMode = 1;
+      goAP = 1;
+    }
   }
   else
   {
@@ -30,17 +41,23 @@ void setup()
     save_config1_spiff();
     EEPROM.write(1, bootX); //(pos,data)
     EEPROM.commit();
+    apMode = 1;
+    goAP = 1;
   }
 
   //web_setup(); //apmode
-  nfcSetup(); //nfc setup
+  nfcSetup();                             //nfc setup
   maintask = xTaskGetCurrentTaskHandle(); // My taskhandle
   SPIsem = xSemaphoreCreateMutex();
   setup_dualcore();
   DEBUG_PRINT("begin0:");
   DEBUG_PRINTLN(inicio);
   solicitud_web = 1;
-  
+  WiFi.disconnect();
+  WiFi.mode(WIFI_OFF);
+  delay(1000); // short wait to ensure WIFI_OFF
+  WiFi.persistent(false);
+  WiFi.mode(WIFI_AP_STA);
 }
 
 TaskHandle_t Task2, Task3;

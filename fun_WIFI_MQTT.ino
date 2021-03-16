@@ -20,48 +20,67 @@ void callback(char *topic, byte *payload, unsigned int length)
 
 void wifi_mqtt_setup()
 {
-  bussyMqtt = 1;
-  count = 1;
-  WiFi.begin(ssid, password);
-  DEBUG_PRINTLN("wifi connecting...");
-  while (WiFi.status() != WL_CONNECTED)
+  if (apMode >= 0)
+
   {
-    delay(500);
-    DEBUG_PRINT(".");
-    count++;
-    if (count > 50)
+    DEBUG_PRINTLN("wifi connecting...");
+    DEBUG_PRINTLN(ssid);
+    DEBUG_PRINTLN(password);
+    bussyMqtt = 1;
+    count = 1;
+    WiFi.begin(ssid, password);
+    DEBUG_PRINTLN("wifi connecting...");
+    while (WiFi.status() != WL_CONNECTED && apMode >= 0)
+    {
+      delay(500);
+      DEBUG_PRINT(".");
+      count++;
+      if (count > 50)
+      {
+        count = 0;
+        // apMode = 1;
+        // setupAPSSID(0);
+        break;
+      }
+      //wifiLedBlink();
+    }
+    if (apMode == 1)
     {
       count = 0;
-      //apMode = 1;
-      //setupAPSSID(0);
-      break;
+      //WiFi.disconnect(true);
+      // WiFi.disconnect();
+      // WiFi.mode(WIFI_OFF);
+      // delay(1000); // short wait to ensure WIFI_OFF
+      // WiFi.persistent(false);
     }
-    //wifiLedBlink();
+    else
+    {
+      if (count > 0)
+      {
+        DEBUG_PRINTLN("");
+        DEBUG_PRINT(ssid);
+        DEBUG_PRINT(" RSSI:");
+        WRSSI = String(WiFi.RSSI());
+        DEBUG_PRINTLN(WRSSI);
+        DEBUG_PRINTLN("WiFi connected");
+        DEBUG_PRINTLN("STATION IP address: ");
+
+        ipRed = String(WiFi.localIP()[0]) + "." + String(WiFi.localIP()[1]) + "." + String(WiFi.localIP()[2]) + "." + String(WiFi.localIP()[3]);
+        DEBUG_PRINTLN(ipRed);
+        cambioIp = 1;
+        count = 0;
+      }
+      String MQTTPORT = String(MQTTPort);
+      DEBUG_PRINTLN(MQTTHost);
+      DEBUG_PRINTLN(MQTTPORT.toInt());
+
+      mqttclient.setServer(MQTTHost, MQTTPORT.toInt());
+      mqttclient.setCallback(callback);
+
+      wifi_mqtt_reconnect_setup(MQTTTopic, MQTTTopic2);
+      bussyMqtt = 0;
+    }
   }
-  if (count > 0)
-  {
-    DEBUG_PRINTLN("");
-    DEBUG_PRINT(ssid);
-    DEBUG_PRINT(" RSSI:");
-    WRSSI = String(WiFi.RSSI());
-    DEBUG_PRINTLN(WRSSI);
-    DEBUG_PRINTLN("WiFi connected");
-    DEBUG_PRINTLN("STATION IP address: ");
-
-    ipRed = String(WiFi.localIP()[0]) + "." + String(WiFi.localIP()[1]) + "." + String(WiFi.localIP()[2]) + "." + String(WiFi.localIP()[3]);
-    DEBUG_PRINTLN(ipRed);
-    cambioIp = 1;
-    count = 0;
-  }
-  String MQTTPORT = String(MQTTPort);
-  DEBUG_PRINTLN(MQTTHost);
-  DEBUG_PRINTLN(MQTTPORT.toInt());
-
-  mqttclient.setServer(MQTTHost, MQTTPORT.toInt());
-  mqttclient.setCallback(callback);
-
-  wifi_mqtt_reconnect_setup(MQTTTopic, MQTTTopic2);
-  bussyMqtt = 0;
 }
 
 void wifi_mqtt_reconnect(char mqtttopic[120], char mqtttopic2[120])
@@ -201,7 +220,7 @@ int wifi_mqtt_subscribe(String mqtttopic)
       wifi_mqtt_publish((clientId), "{\"mqtt\": \"SUBSCRIBED\"}");
       DEBUG_PRINTLN("WSUBSCRIBE PACKET SENT");
       subscribed = 1;
-      apMode = 0;
+      apMode = 2;
       minutosEnApMode = 0;
       bussyMqtt = 0;
       return 1;

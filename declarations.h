@@ -231,3 +231,4 @@ SemaphoreHandle_t SPIsem = NULL; // For exclusive SPI usage
 TaskHandle_t maintask;           // Taskhandle for main task
 
 bool sendTag = 0;
+bool goAP = 0;
