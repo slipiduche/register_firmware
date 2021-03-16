@@ -134,12 +134,12 @@ long int lastposition4 = 0;
 WiFiClient espClient;
 PubSubClient mqttclient(espClient);
 /****Variables WIFI MQTT****/
-char host[120] = "broker.mqttdashboard.com";
+char host[120] = "192.168.0.103";
 char datarecvd[512];
 int reconnect = 0;
 /****parametros mqtt ****/
-char MQTTHost[120] = "broker.mqttdashboard.com";
-char MQTTPort[6] = "1883";
+char MQTTHost[120] = "192.168.0.103";
+char MQTTPort[6] = "3000";
 char MQTTClientID[60] = "";
 char MQTTTopic[60] = "";
 char MQTTTopic2[60] = "";
