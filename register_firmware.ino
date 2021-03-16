@@ -37,7 +37,7 @@ void loop() ///nfc LOOP
     ESP.restart();
   }
 
-  if ((abs(millis() - nfcDelay) >= 150) && (bussyMqtt == 0) && (apMode == 0) && (sendTag == 0))
+  if ((abs(millis() - nfcDelay) >= 150) && (bussyMqtt == 0) && (apMode == 2) && (sendTag == 0))
   {
     claimSPI("NFC"); // Claim SPI bus
     tagId = nfc_Loop();
