@@ -105,7 +105,7 @@ void wifi_mqtt_reconnect_setup(char mqtttopic[120], char mqtttopic2[120])
 {
   String topic_s = "";
   bussyMqtt = 1;
-  if ((WiFi.status() == WL_CONNECTED) && (apMode == 0))
+  if ((WiFi.status() == WL_CONNECTED) && (apMode != 1))
   {
     while (!mqttclient.connected())
     {
@@ -145,7 +145,7 @@ void wifi_mqtt_reconnect_setup(char mqtttopic[120], char mqtttopic2[120])
       }
       //wifiLedBlink();
       reconnect++;
-      if ((reconnect > 5) && (apMode == 0))
+      if ((reconnect > 5) && (apMode != 1))
       {
         //apMode = 1;
         reconnect = 0;
@@ -162,7 +162,7 @@ void wifi_mqtt_reconnect_setup(char mqtttopic[120], char mqtttopic2[120])
   {
     reconnect++;
 
-    if ((reconnect > 1) && (apMode == 0) && WiFi.status() != WL_CONNECTED)
+    if ((reconnect > 1) && (apMode != 1) && WiFi.status() != WL_CONNECTED)
     {
       //apMode = 1;
       reconnect = 0;
@@ -173,7 +173,7 @@ void wifi_mqtt_reconnect_setup(char mqtttopic[120], char mqtttopic2[120])
       ESP.restart();
       return;
     }
-    if ((reconnect > 5) && (apMode == 0))
+    if ((reconnect > 5) && (apMode != 1))
     {
       //apMode = 1;
       reconnect = 0;
